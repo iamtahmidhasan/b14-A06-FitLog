@@ -6,11 +6,11 @@ export default function Hero() {
     <div>
       <section className="grid items-center gap-10 rounded-2xl border border-base-300 bg-base-200 p-8 lg:grid-cols-2 lg:p-12">
         <div className="space-y-5">
-          <p className="font-heading text-sm tracking-[0.2em] text-primary">
+          <p className="font-heading text-sm  text-primary uppercase font-geist">
             Workout Library
           </p>
 
-          <h1 className="text-4xl leading-tight sm:text-5xl">
+          <h1 className="text-4xl leading-tight sm:text-5xl uppercase">
             Train with intent. Log every set.
           </h1>
 

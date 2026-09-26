@@ -34,9 +34,7 @@ export default async function Library() {
       {/* Header */}
       <div>
         <div className="flex items-center gap-2">
-          <Dumbbell className="h-5 w-5 text-primary" />
-
-          <h2 className="text-3xl font-bold tracking-tight">
+          <h2 className="text-3xl tracking-tight uppercase">
             The Library
           </h2>
         </div>

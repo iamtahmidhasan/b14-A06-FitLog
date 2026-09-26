@@ -42,7 +42,7 @@ export default function Header() {
             </ul>
           </div>
           <Link
-            className="flex items-center gap-2 font-heading text-xl tracking-wide"
+            className="flex items-center gap-2 font-heading text-xl tracking-wide uppercase font-geist"
             href="/"
           >
             <svg
