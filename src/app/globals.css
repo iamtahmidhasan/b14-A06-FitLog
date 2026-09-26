@@ -1,26 +1,68 @@
 @import "tailwindcss";
+@plugin "daisyui";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --font-display: var(--font-oswald), var(--font-inter), sans-serif;
+  --font-body: var(--font-inter), var(--font-geist-sans), sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+}
+
+
+@plugin "daisyui/theme" {
+  name: "fitlog";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+
+  --color-base-100: #0f1115;
+  --color-base-200: #1a1d23;
+  --color-base-300: #252830;
+  --color-base-content: #e8eaef;
+
+  --color-primary: #c4f000;
+  --color-primary-content: #0f1115;
+
+  --color-secondary: #2a2e38;
+  --color-secondary-content: #e8eaef;
+
+  --color-accent: #c4f000;
+  --color-accent-content: #0f1115;
+
+  --color-neutral: #12141a;
+  --color-neutral-content: #e8eaef;
+
+  --color-info: #7dd3fc;
+  --color-info-content: #0f1115;
+
+  --color-success: #86efac;
+  --color-success-content: #0f1115;
+
+  --color-warning: #fbbf24;
+  --color-warning-content: #0f1115;
+
+  --color-error: #f87171;
+  --color-error-content: #0f1115;
+
+  --radius-selector: 1rem;
+  --radius-field: 0.75rem;
+  --radius-box: 1rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
 }
