@@ -1,9 +1,5 @@
-
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { Clock, Flame, Star, Dumbbell } from "lucide-react";
 
 const API_URL = "https://api.abcz.workers.dev/api/fitlog";
@@ -24,44 +20,14 @@ type Workout = {
   category?: string;
 };
 
-export default function Library() {
-  const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+async function getDataPromise(): Promise<Workout[]> {
+  const res = await fetch(API_URL);
+  const data = await res.json();
+  return data
+}
 
-  useEffect(() => {
-    async function fetchWorkouts() {
-      try {
-        setLoading(true);
-        setError("");
-
-        const response = await fetch(API_URL);
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch workouts");
-        }
-
-        const data = await response.json();
-
-        // Supports either:
-        // { data: [...] }
-        // { workouts: [...] }
-        // or directly [...]
-        const workoutData = Array.isArray(data)
-          ? data
-          : data.data || data.workouts || [];
-
-        setWorkouts(workoutData);
-      } catch (error) {
-        console.error(error);
-        setError("Unable to load workouts. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchWorkouts();
-  }, []);
+export default async function Library() {
+  const workouts = await getDataPromise();
 
   return (
     <section id="library" className="space-y-6">
@@ -80,47 +46,8 @@ export default function Library() {
         </p>
       </div>
 
-      {/* Loading */}
-      {loading && (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={index}
-              className="overflow-hidden rounded-box border border-base-300 bg-base-200"
-            >
-              <div className="h-48 animate-pulse bg-base-300" />
-
-              <div className="space-y-4 p-5">
-                <div className="h-4 w-24 animate-pulse rounded bg-base-300" />
-
-                <div className="h-6 w-3/4 animate-pulse rounded bg-base-300" />
-
-                <div className="h-4 w-1/2 animate-pulse rounded bg-base-300" />
-
-                <div className="h-4 w-full animate-pulse rounded bg-base-300" />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Error */}
-      {!loading && error && (
-        <div className="rounded-box border border-error/30 bg-error/10 p-6 text-center">
-          <p className="text-error">{error}</p>
-
-          <button
-            type="button"
-            onClick={() => window.location.reload()}
-            className="btn btn-sm mt-4 rounded-field"
-          >
-            Try Again
-          </button>
-        </div>
-      )}
-
       {/* Empty */}
-      {!loading && !error && workouts.length === 0 && (
+      {workouts.length === 0 && (
         <div className="rounded-box border border-base-300 bg-base-200 p-10 text-center">
           <Dumbbell className="mx-auto h-10 w-10 text-base-content/40" />
 
@@ -135,7 +62,7 @@ export default function Library() {
       )}
 
       {/* Workout Grid */}
-      {!loading && !error && workouts.length > 0 && (
+      {workouts.length > 0 && (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {workouts.map((workout) => {
             const name =
@@ -151,7 +78,9 @@ export default function Library() {
             const muscles =
               workout.muscleGroups ||
               workout.muscles ||
-              (workout.category ? [workout.category] : []);
+              (workout.category
+                ? [workout.category]
+                : []);
 
             return (
               <Link
