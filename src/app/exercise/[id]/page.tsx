@@ -1,30 +1,13 @@
 import Image from "next/image";
+import ExerciseActions from "./ExerciseActions";
 import {
-  Bookmark,
-  CalendarPlus,
-} from "lucide-react";
+  getWorkoutImage,
+  getWorkoutMuscles,
+  getWorkoutName,
+  type Workout,
+} from "@/types/workout";
 
 const API_URL = "https://api.abcz.workers.dev/api/fitlog";
-
-type Workout = {
-  id: string | number;
-  name?: string;
-  title?: string;
-  description?: string;
-  equipment?: string;
-  image?: string;
-  imageUrl?: string;
-  duration?: number | string;
-  caloriesBurned?: number | string;
-  rating?: number | string;
-  difficulty?: string;
-  sets?: number | string;
-  reps?: string | number;
-  muscleGroups?: string[];
-  muscles?: string[];
-  category?: string;
-  instructions?: string[];
-};
 
 async function getWorkout(id: string): Promise<Workout | null> {
   try {
@@ -65,34 +48,30 @@ export default async function Page({
     );
   }
 
-  const name =
-    workout.name ||
-    workout.title ||
-    "Untitled Workout";
+  const name = getWorkoutName(workout);
 
-  const image =
-    workout.image ||
-    workout.imageUrl ||
-    "/placeholder-workout.jpg";
+  const image = getWorkoutImage(workout);
 
-  const muscles =
-    workout.muscleGroups ||
-    workout.muscles ||
-    (workout.category
-      ? [workout.category]
-      : []);
+  const muscles = getWorkoutMuscles(workout);
 
   return (
     <article className="grid gap-10 lg:grid-cols-2">
-      {/* Image */}
+      {/* Image. When the API has no image we show a plain box instead of
+          pointing `next/image` at a file that does not exist. */}
       <div className="relative min-h-72 overflow-hidden rounded-2xl border border-base-300">
-        <Image
-          src={workout.image as string}
-          alt= {name}
-          fill
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover"
-        />
+        {image ? (
+          <Image
+            src={image}
+            alt={name}
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover"
+          />
+        ) : (
+          <div className="flex h-full min-h-72 items-center justify-center bg-base-200 text-base-content/60">
+            No image
+          </div>
+        )}
       </div>
 
       {/* Details */}
@@ -207,24 +186,8 @@ export default async function Page({
             </>
           )}
 
-        {/* Actions */}
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <button
-            type="button"
-            className="btn btn-accent rounded-2xl"
-          >
-            <CalendarPlus className="h-4 w-4" />
-            Add to today&apos;s plan
-          </button>
-
-          <button
-            type="button"
-            className="btn btn-outline rounded-2xl"
-          >
-            <Bookmark className="h-4 w-4" />
-            Save for later
-          </button>
-        </div>
+        {/* Actions. This is a client component, so it can use the plan context. */}
+        <ExerciseActions workout={workout} />
       </div>
     </article>
   );

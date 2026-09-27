@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Oswald } from "next/font/google";
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Toaster from "@/components/Toaster";
 import ExerciseProvider from "@/context/ExerciseProvider";
 
 const geistSans = Geist({
@@ -45,6 +47,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <Footer/>
         </ExerciseProvider>
+
+        {/* Shows the toast popups. Outside the provider because it does not
+            need the plan data, only the place to draw. */}
+        <Toaster />
       </body>
     </html>
   );

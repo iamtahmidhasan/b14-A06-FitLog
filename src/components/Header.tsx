@@ -1,7 +1,18 @@
-import Link from "next/link";
-import React from "react";
+"use client";
 
+import Link from "next/link";
+import { useExercise } from "@/context/ExerciseProvider";
+
+/**
+ * The site navbar.
+ *
+ * The Plan and Saved badges show how many exercises the user has, so this has
+ * to be a client component (it reads the plan context, which lives in the
+ * browser).
+ */
 export default function Header() {
+  const { todaysplan, save } = useExercise();
+
   return (
     <header className="sticky top-0 z-40 border-b border-base-300 bg-base-100/95 backdrop-blur">
       <nav className="navbar mx-auto max-w-6xl px-4">
@@ -75,27 +86,34 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <a className="" href="/my-plan">
+              <Link className="" href="/my-plan">
                 My Plan
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
         <div className="navbar-end gap-2">
-          <a
+          <Link
             className="btn btn-ghost btn-sm gap-2"
-            aria-label="Today's plan"
+            aria-label={`Today's plan, ${todaysplan.length} exercises`}
             href="/my-plan"
           >
-            Plan<span className="badge badge-primary badge-sm">1</span>
-          </a>
-          <a
+            Plan
+            <span className="badge badge-primary badge-sm">
+              {todaysplan.length}
+            </span>
+          </Link>
+
+          <Link
             className="btn btn-ghost btn-sm gap-2"
-            aria-label="Saved workouts"
+            aria-label={`Saved workouts, ${save.length} exercises`}
             href="/my-plan"
           >
-            Saved<span className="badge badge-outline badge-sm">1</span>
-          </a>
+            Saved
+            <span className="badge badge-outline badge-sm">
+              {save.length}
+            </span>
+          </Link>
         </div>
       </nav>
     </header>
