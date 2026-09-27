@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Inter, Oswald } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ExerciseProvider from "@/context/ExerciseProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,11 +37,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${oswald.variable} h-full antialiased`}
     >
       <body data-theme="fitlog" className="min-h-full flex flex-col">
+        <ExerciseProvider>
         <Header/>
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
           {children}
+
         </main>
         <Footer/>
+        </ExerciseProvider>
       </body>
     </html>
   );

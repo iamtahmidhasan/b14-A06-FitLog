@@ -21,9 +21,14 @@ type Workout = {
 };
 
 async function getDataPromise(): Promise<Workout[]> {
-  const res = await fetch(API_URL);
-  const data = await res.json();
-  return data
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) return [];
+    const data: Workout[] = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
 }
 
 export default async function Library() {

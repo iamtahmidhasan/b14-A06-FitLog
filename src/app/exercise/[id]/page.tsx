@@ -27,11 +27,15 @@ type Workout = {
 };
 
 async function getWorkout(id: string): Promise<Workout | null> {
-  const res = await fetch(API_URL)
-  const data = await res.json();
-  return (
-    data.find((workout) => String(workout.id) === String(id)) ?? null
-  );
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) return null;
+    const data: Workout[] = await res.json();
+    if (!Array.isArray(data)) return null;
+    return data.find((workout) => String(workout.id) === String(id)) ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export default async function Page({
