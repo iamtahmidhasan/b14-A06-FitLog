@@ -2,14 +2,6 @@
 
 import Link from "next/link";
 import { useExercise } from "@/context/ExerciseProvider";
-
-/**
- * The site navbar.
- *
- * The Plan and Saved badges show how many exercises the user has, so this has
- * to be a client component (it reads the plan context, which lives in the
- * browser).
- */
 export default function Header() {
   const { todaysplan, save } = useExercise();
 

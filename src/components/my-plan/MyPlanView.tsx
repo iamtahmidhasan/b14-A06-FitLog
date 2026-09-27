@@ -7,26 +7,10 @@ import { MAX_PLAN_SIZE, useExercise } from "@/context/ExerciseProvider";
 import PlanWorkoutCard from "./PlanWorkoutCard";
 import { toNumber, getWorkoutName, type Workout } from "@/types/workout";
 
-/** Which list the user is looking at. */
 type Tab = "plan" | "saved";
-
-/** The ways the list can be sorted. */
 type SortKey = "duration" | "calories" | "rating";
-
-/**
- * The visible part of the "My Plan" page.
- *
- * WHY IS THIS A CLIENT COMPONENT?
- * The plan and saved lists live in the browser (they come from the context),
- * and a server component cannot use context. So `page.tsx` fetches the
- * exercises on the server and passes them down as a prop.
- */
 export default function MyPlanView({ workouts }: { workouts: Workout[] }) {
-  // The context only holds the IDs, so this is where the IDs are matched up
-  // with the real exercises that the server sent.
   const { todaysplan, setTodaysplan, save, setSave } = useExercise();
-
-  // Which tab is open, and how the list is sorted.
   const [tab, setTab] = useState<Tab>("plan");
   const [sortBy, setSortBy] = useState<SortKey>("duration");
 
@@ -37,8 +21,6 @@ export default function MyPlanView({ workouts }: { workouts: Workout[] }) {
   const savedWorkouts = workouts.filter((workout) =>
     save.includes(String(workout.id)),
   );
-
-  // The list for the open tab, in the chosen order.
   const visible = tab === "plan" ? todayPlan : savedWorkouts;
   const sorted = sortWorkouts(visible, sortBy);
 
@@ -53,14 +35,11 @@ export default function MyPlanView({ workouts }: { workouts: Workout[] }) {
   );
 
   function handleMarkDone(id: string) {
-    // Finishing an exercise means it leaves today's plan, so the card
-    // disappears from the list.
     setTodaysplan(todaysplan.filter((item) => item !== id));
     toast.success(`${nameOf(id)} is done. Nice work!`);
   }
 
   function handleRemove(id: string) {
-    // Remove from whichever list we are looking at.
     if (tab === "plan") {
       setTodaysplan(todaysplan.filter((item) => item !== id));
       toast.info(`${nameOf(id)} was removed from today's plan.`);
@@ -74,8 +53,6 @@ export default function MyPlanView({ workouts }: { workouts: Workout[] }) {
     setTodaysplan([]);
     toast.info("Today's plan was cleared.");
   }
-
-  // Looks up the name of an exercise from its id, for the toast messages.
   function nameOf(id: string): string {
     const match = workouts.find((workout) => String(workout.id) === id);
     return match ? getWorkoutName(match) : "Workout";
@@ -98,9 +75,6 @@ export default function MyPlanView({ workouts }: { workouts: Workout[] }) {
           <div className="stat-title">Exercises</div>
           <div className="stat-value text-primary">
             {todayPlan.length}
-            <span className="text-lg text-base-content/50">
-              /{MAX_PLAN_SIZE}
-            </span>
           </div>
         </div>
 

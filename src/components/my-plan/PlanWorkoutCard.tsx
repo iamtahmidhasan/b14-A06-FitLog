@@ -10,24 +10,10 @@ import {
   type Workout,
 } from "@/types/workout";
 
-/**
- * One row in the plan / saved list.
- *
- * This component is repeated many times, so it lives in its own file instead
- * of being copy-pasted. It holds no state of its own: everything it changes
- * (`onMarkDone`, `onRemove`) comes from the parent. That is a simple pattern
- * and much easier to follow than a `useState` inside every row.
- */
 type PlanWorkoutCardProps = {
   workout: Workout;
-
-  /** Which list this row belongs to. Decides which buttons are shown. */
   mode: "plan" | "saved";
-
-  /** Called by the "Mark as Done" button. Takes the card off the plan. */
   onMarkDone: (id: string) => void;
-
-  /** Called by the X button. Takes the card off whichever list it is on. */
   onRemove: (id: string) => void;
 };
 
@@ -41,14 +27,12 @@ export default function PlanWorkoutCard({
   const image = getWorkoutImage(workout);
   const id = String(workout.id);
 
-  // Only render a calorie badge when the API actually sent a value.
   const calories = toNumber(workout.caloriesBurned);
   const duration = toNumber(workout.duration);
   const rating = toNumber(workout.rating);
 
   return (
     <li className="flex flex-col gap-4 rounded-2xl border border-base-300 bg-base-200 p-4 sm:flex-row sm:items-center">
-      {/* Thumbnail, or a plain box if the exercise has no image. */}
       <div className="relative h-28 w-full shrink-0 overflow-hidden rounded-2xl bg-base-300 sm:h-24 sm:w-36">
         {image ? (
           <Image
@@ -99,10 +83,6 @@ export default function PlanWorkoutCard({
         >
           View Details
         </Link>
-
-        {/* "Mark as Done" only makes sense for today's plan, not the saved
-            list, so we hide it in saved mode. Clicking it finishes the
-            exercise, which takes the card off the plan. */}
         {mode === "plan" ? (
           <button
             type="button"

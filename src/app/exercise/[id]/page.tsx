@@ -6,6 +6,7 @@ import {
   getWorkoutName,
   type Workout,
 } from "@/types/workout";
+import { Metadata } from "next";
 
 const API_URL = "https://api.abcz.workers.dev/api/fitlog";
 
@@ -19,6 +20,11 @@ async function getWorkout(id: string): Promise<Workout | null> {
   } catch {
     return null;
   }
+}
+
+export const metadata: Metadata = {
+  title: 'Exercise | FitLog',
+  description: 'FitLog description',
 }
 
 export default async function Page({
